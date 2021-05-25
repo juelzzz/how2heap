@@ -48,10 +48,18 @@ int main()
 	printf("You can find the source of the unlink macro at https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;h=ef04360b918bceca424482c6db03cc5ec90c3e00;hb=07c18a008c2ed8f5660adba2b778671db159a141#l1344\n\n");
 	free(chunk1_ptr);
 
-	printf("At this point we can use chunk0_ptr to overwrite itself to point to an arbitrary location.\n");
+	printf("The nefarious action here is: !!Contents of chunk0 are still _user_-controlled!\n");
+
 	char victim_string[8];
 	strcpy(victim_string,"Hello!~");
+	// chunk0_ptr is pointing to an adress 3*sizeof(uint64_t) before &chunk0_ptr (i.e. where it is stored)
+	printf("Since chunk0_ptr now holds adress %p and is stored at %p, it can overwrite itself.\n", chunk0_ptr, &chunk0_ptr);
+	printf("A write to chunk0 at offset %lx bytes needs to be executed to modify the ptr.\n", (&chunk0_ptr- (uint64_t**) chunk0_ptr)*sizeof(uint64_t));
+	printf("At this point we can use chunk0_ptr to overwrite itself to point to an arbitrary location.\n");
+
+	printf("\nOverwriting value stored at %p (i.e. %p).\n", &chunk0_ptr, chunk0_ptr);
 	chunk0_ptr[3] = (uint64_t) victim_string;
+	printf("Overwriting value stored at %p (i.e. %p).\n", &chunk0_ptr, chunk0_ptr);
 
 	printf("chunk0_ptr is now pointing where we want, we use it to overwrite our victim string.\n");
 	printf("Original value: %s\n",victim_string);
