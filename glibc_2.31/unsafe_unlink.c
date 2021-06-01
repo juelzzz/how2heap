@@ -48,7 +48,7 @@ int main()
 	printf("You can find the source of the unlink macro at https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;h=ef04360b918bceca424482c6db03cc5ec90c3e00;hb=07c18a008c2ed8f5660adba2b778671db159a141#l1344\n\n");
 	free(chunk1_ptr);
 
-	printf("The nefarious action here is: !!Contents of chunk0 are still _user_-controlled!\n");
+	printf("The nefarious action here is: Contents of chunk0 are still _user_-controlled (... in a real world scenario)!\n");
 
 	char victim_string[8];
 	strcpy(victim_string,"Hello!~");
